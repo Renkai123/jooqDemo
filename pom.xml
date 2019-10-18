@@ -133,7 +133,7 @@
                 <configuration>
                     <generator>
                         <database>
-                            <name>org.jooq.meta.extensions.jpa.JPADatabaseNew</name>
+                            <name>org.jooq.meta.extensions.jpa.JPADatabase</name>
                             <inputSchema>PUBLIC</inputSchema>
                             <outputSchema>library</outputSchema>
                             <properties>
@@ -143,13 +143,6 @@
                                     <value>com.example.creams.demo.entity</value>
                                 </property>
 
-                                <!-- Whether JPA 2.1 AttributeConverters should be auto-mapped to jOOQ Converters.
-                                     Custom <forcedType/> configurations will have a higher priority than these auto-mapped converters.
-                                     This defaults to true. -->
-<!--                                <property>-->
-<!--                                    <key>use-attribute-converters</key>-->
-<!--                                    <value>false</value>-->
-<!--                                </property>-->
                             </properties>
                         </database>
                         <target>
