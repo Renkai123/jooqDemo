@@ -133,7 +133,7 @@
                 <configuration>
                     <generator>
                         <database>
-                            <name>org.jooq.meta.extensions.jpa.JPADatabase</name>
+                            <name>org.jooq.meta.extensions.jpa.JPADatabaseNew</name>
                             <inputSchema>PUBLIC</inputSchema>
                             <outputSchema>library</outputSchema>
                             <properties>
