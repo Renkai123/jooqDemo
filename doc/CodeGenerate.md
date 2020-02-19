@@ -3,7 +3,7 @@
 #### 背景
 
     由于querydsl近两年没有更新，使用JOOQ去做动态sql查询。JOOQ 是基于Java访问关系型数据库的工具包，轻量，简单，安全并且足够灵活，可以轻松的使用Java面向对象语法来实现各种复杂的sql。和querydsl一样JOOQ也需要生成一堆文件。
-    生成JOOQ类有通过连接数据库，flyway，entity等方式。由于企业级应用无法写死数据库地址账号密码在pom文件中，flyway过于死板不利于更新（flyway文件变更需要更改数据中checksum，并且需要和数据库严格一致），所以通过entity去生成JOOQ类。
+    生成JOOQ类有通过连接数据库，flyway，entity等方式。企业级应用无法写死数据库地址账号密码在pom文件中，flyway过于死板不利于更新（flyway文件变更需要更改数据中checksum，并且需要和数据库严格一致），所以通过entity去生成JOOQ类。
 
 但是通过[官方文档](https://www.jooq.org/doc/latest/manual/code-generation/codegen-jpa/) 生成有以下缺点：
     
@@ -12,7 +12,7 @@
     3. 不能使用@Column(columnDefinition = "")
     4. 库名需要指定
 
-总之与我jpa生成的table不符合，所以需要改写插件和代码生成。
+总之与jpa生成的table不符合，所以需要改写插件和代码生成。
 
 #### JPADatabase
 JOOQ通过H2 Database内嵌数据库生成JOOQ类。H2 Database生成的数据库字段名默认全部变为大写，所以造就上述缺点，生成出来的sql也都默认大写。需要在连接h2的时候 database_to_upper设置为false
@@ -20,7 +20,7 @@ JOOQ通过H2 Database内嵌数据库生成JOOQ类。H2 Database生成的数据�
 connection = new org.h2.Driver().connect("jdbc:h2:mem:jooq-meta-extensions-" + UUID.randomUUID() + ";MODE=MySQL;database_to_upper=false", info);
 ```
 
-新增使用SpringPhysicalNamingStrategy的策略
+使用SpringPhysicalNamingStrategy的策略
 ```
 applySetting(AvailableSettings.PHYSICAL_NAMING_STRATEGY, "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy")
 ```
@@ -117,7 +117,10 @@ applySetting(AvailableSettings.PHYSICAL_NAMING_STRATEGY, "org.springframework.bo
 #### 总结
 JOOQ通过H2 Database内嵌数据库生成JOOQ类，所以H2生成的数据库必须和JPA自动生成的数据库相符合。在生成数据库的时候使用jpa.hibernate.SpringPhysicalNamingStrategy的策略保持一致。
 
+[github地址](https://github.com/Renkai123/jooqDemo)
 
+任锴 杭州匠人网络科技有限公司  任锴 杭州滨江优迈科技园3号楼2楼杭州匠人网络科技有限公司 623061571029966905 杭州银行 330682199501251233 
+823154818@qq.com  15167192766
 
 
 

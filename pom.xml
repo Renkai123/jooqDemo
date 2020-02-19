@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.9.RELEASE</version>
+        <version>2.2.0.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example.creams</groupId>
@@ -15,27 +15,45 @@
     <description>Jooq project for Spring Boot</description>
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
+        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
     </properties>
 
     <repositories>
         <repository>
-            <id>aliyun-maven</id>
+            <id>aliyun-maven-repository</id>
             <url>https://maven.aliyun.com/repository/central</url>
         </repository>
         <repository>
             <id>souban-nexus-repository</id>
             <name>souban nexus release repository</name>
-            <url>https://maven.souban.io/repository/release/</url>
+            <url>https://maven.souban.io/repository/release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
         <repository>
-            <id>souban-nexus-snapshot-repository</id>
+            <id>souban-nexus-snapshots-repository</id>
             <name>souban nexus snapshot repository</name>
-            <url>https://maven.souban.io/repository/snapshots/</url>
+            <url>https://maven.souban.io/repository/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
         </repository>
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>com.vladmihalcea</groupId>
+            <artifactId>hibernate-types-5</artifactId>
+            <version>2.8.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-java8</artifactId>
+            <version>5.1.0.Final</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jooq</artifactId>
@@ -72,15 +90,32 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.jooq/jooq-codegen -->
         <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-meta-extensions</artifactId>
-            <version>3.11.11</version>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-core</artifactId>
+            <version>${querydsl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <scope>provided</scope>
+            <version>${querydsl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+            <version>${querydsl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-sql</artifactId>
+            <version>${querydsl.version}</version>
         </dependency>
 
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -93,63 +128,26 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <executions>
-                    <execution>
-                        <id>pre-compile</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <configuration>
-                            <includes>
-                                <include>com/example/creams/demo/entity/*</include>
-                                <include>org/jooq/meta/extensions/**</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <release>${java.version}</release>
+                </configuration>
             </plugin>
             <plugin>
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen-maven</artifactId>
-                <version>3.11.11</version>
+                <groupId>com.mysema.maven</groupId>
+                <artifactId>apt-maven-plugin</artifactId>
+                <version>1.1.3</version>
                 <executions>
                     <execution>
-                        <id>jooq-codegen</id>
-                        <phase>generate-sources</phase>
                         <goals>
-                            <goal>generate</goal>
+                            <goal>process</goal>
                         </goals>
+                        <configuration>
+                            <outputDirectory>target/generated-sources/jpa</outputDirectory>
+                            <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <generator>
-                        <database>
-                            <name>org.jooq.meta.extensions.jpa.JPADatabase</name>
-                            <inputSchema>PUBLIC</inputSchema>
-                            <outputSchema>library</outputSchema>
-                            <properties>
-                                <!-- A comma separated list of Java packages, that contain your entities -->
-                                <property>
-                                    <key>packages</key>
-                                    <value>com.example.creams.demo.entity</value>
-                                </property>
-
-                            </properties>
-                        </database>
-                        <target>
-                            <packageName>com.example.creams.demo.jooq</packageName>
-                        </target>
-                    </generator>
-                </configuration>
             </plugin>
         </plugins>
     </build>
